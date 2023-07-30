@@ -16,5 +16,20 @@ class Category:
     def check_funds(self,amount):
         return self.get_balance() >= amount
 
+    def withdraw(self, amount, description = ""):
+        if self.check_funds(amount) == True:
+            self.ledger.append({"amount": -amount, "description": description})
+            return True
+        else:
+            return False
+    
+    def transfer(self, amount, category):
+        if self.check_funds(amount) == True:
+            self.withdraw(amount, f"Transfer to {category.budget_category}")
+            category.deposit(amount, f"Transfer from {self.budget_category}")
+            return True
+        else:
+            return False
+
 
 def create_spend_chart(categories):
