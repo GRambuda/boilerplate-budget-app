@@ -31,5 +31,13 @@ class Category:
         else:
             return False
 
+    def __str__(self):
+        line_heading = f"{self.budget_category.center(30, '*')}\n"
+        ledger_items = ['{:<23}{:>7}'.format(transaction["description"][:23],
+            "{:.2f}".format(transaction["amount"]))
+                        for transaction in self.ledger]
+        total_balance = f"Total: {self.get_balance():.2f}"
+        return line_heading + '\n'.join(ledger_items)+ '\n' + total_balance
+
 
 def create_spend_chart(categories):
