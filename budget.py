@@ -1,22 +1,74 @@
 class Category:
+    """
+    A class representing a budget category.
+
+    Attributes:
+        budget_category (str): The name of the budget category.
+        ledger (list): A list of transactions in the form of 
+                       {"amount": amount, "description": description}.
+    """
 
     def __init__(self, budget_category):
+        """
+        Initialize a new budget category.
+
+        Args:
+            budget_category (str): The name of the budget category.
+        """
         self.ledger = []
         self.budget_category = budget_category
     
     def get_balance(self):
+        """
+        Get the current balance of the budget category.
+
+        Returns:
+            float: The current balance.
+        """
         balance = 0
         for transaction in self.ledger:
             balance += transaction["amount"]
         return round(balance,2)
 
     def deposit(self, amount, description = ""):
+        """
+        Record a deposit transaction in the ledger.
+
+        Args:
+            amount (float): The amount of the deposit.
+            description (str, optional): The description of the deposit 
+                                         (default is an empty string).
+
+        Returns:
+            None
+        """
         self.ledger.append({"amount": amount, "description": description})
     
     def check_funds(self,amount):
+        """
+        Check if there are enough funds in the budget category for the 
+        specified amount.
+
+        Args:
+            amount (float): The amount to check.
+
+        Returns:
+            bool: True if there are enough funds, False otherwise.
+        """
         return self.get_balance() >= amount
 
     def withdraw(self, amount, description = ""):
+        """
+        Record a withdrawal transaction in the ledger.
+
+        Args:
+            amount (float): The amount of the withdrawal.
+            description (str, optional): The description of the withdrawal 
+                                         (default is an empty string).
+
+        Returns:
+            bool: True if the withdrawal took place, False otherwise.
+        """
         if self.check_funds(amount) == True:
             self.ledger.append({"amount": -amount, "description": description})
             return True
@@ -24,6 +76,16 @@ class Category:
             return False
     
     def transfer(self, amount, category):
+        """
+        Transfer an amount from this budget category to another.
+
+        Args:
+            amount (float): The amount to transfer.
+            other_category (Category): The destination budget category.
+
+        Returns:
+            bool: True if the transfer took place, False otherwise.
+        """
         if self.check_funds(amount) == True:
             self.withdraw(amount, f"Transfer to {category.budget_category}")
             category.deposit(amount, f"Transfer from {self.budget_category}")
@@ -32,6 +94,13 @@ class Category:
             return False
 
     def __str__(self):
+        """
+        Return a string representation of the budget category.
+
+        Returns:
+            str: The formatted string representation of all transactions in
+                 the budget category.
+        """
         line_heading = f"{self.budget_category.center(30, '*')}\n"
         ledger_items = ['{:<23}{:>7}'.format(transaction["description"][:23],
             "{:.2f}".format(transaction["amount"]))
@@ -41,6 +110,17 @@ class Category:
 
 
 def create_spend_chart(categories):
+    """
+    Builds a bar chart represention of the percentage spent in each given
+    category.
+    
+    Args:
+        categories (list): A list of budget categories.
+
+    Returns:
+        str: The formatted string representation of each withdrawal as a
+             percentage of total withdrawals in a bar chart. 
+    """
     total_withdrawals = {}
     percentage_share = {}
     
