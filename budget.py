@@ -72,8 +72,7 @@ class Category:
         if self.check_funds(amount) == True:
             self.ledger.append({"amount": -amount, "description": description})
             return True
-        else:
-            return False
+        return False
     
     def transfer(self, amount, category):
         """
@@ -90,8 +89,7 @@ class Category:
             self.withdraw(amount, f"Transfer to {category.budget_category}")
             category.deposit(amount, f"Transfer from {self.budget_category}")
             return True
-        else:
-            return False
+        return False
 
     def __str__(self):
         """
@@ -113,7 +111,7 @@ def create_spend_chart(categories):
     """
     Builds a bar chart represention of the percentage spent in each given
     category.
-    
+
     Args:
         categories (list): A list of budget categories.
 
@@ -131,8 +129,7 @@ def create_spend_chart(categories):
                 if category.budget_category not in total_withdrawals.keys():
                     total_withdrawals.update(
                         {category.budget_category: transactions['amount']})
-                else:
-                    total_withdrawals[
+                total_withdrawals[
                     category.budget_category] += transactions['amount']
     
     # calculate the total withdrawals for all provided categories
@@ -173,8 +170,7 @@ def create_spend_chart(categories):
     for i in range(len(category_list)):
         if len(category_list[i]) < length:
             category_list[i] += ' ' * (length - len(category_list[i]))
-        else:
-            continue
+        continue
 
     category_labels = []
     for n in range(length):
